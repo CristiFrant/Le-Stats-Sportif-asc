@@ -1,0 +1,41 @@
+Acest proiect implementeaza un webserver Flask care proceseaza si analizeaza date despre nutritie, activitate fizica si obezitate in SUA.
+Scopul principal al proiectului este de a oferi un API care permite utilizatorilor sa interogheze si sa analizeze datele dintr-un fisier
+CSV, oferind statistici precum media globala, media pe state, cele mai bune sau cele mai slabe cinci state, diferente fata de medie si
+ alte analize relevante.
+
+Structura proiectului este organizata in mai multe module. Fisierul app/__init__.py initializeaza serverul Flask, incarca datele
+din fisierul CSV si configureaza un pool de thread-uri pentru procesarea task-urilor. Fisierul app/routes.py defineste rutele API
+care permit interactiunea cu serverul. Modulul app/data_ingestor.py contine clasa DataIngestor, care incarca si proceseaza datele
+din fisierul CSV. In plus, app/task_runner.py implementeaza un pool de thread-uri pentru procesarea task-urilor asincrone,
+iar app/log.py configureaza un logger pentru a inregistra activitatea serverului. Testele unitare sunt definite in TestWebServer.py,
+unde sunt validate functiile din routes.py si data_ingestor.py.
+
+Implementarea incepe cu initializarea serverului Flask in app/__init__.py. Serverul incarca datele din fisierul CSV folosind
+clasa DataIngestor, creeaza un pool de thread-uri pentru procesarea task-urilor si configureaza variabile globale precum
+job_counter si job_statuses pentru a urmari starea task-urilor. Clasa DataIngestor este responsabila pentru procesarea datelor.
+Aceasta incarca datele dintr-un fisier CSV si le stocheaza sub forma de obiecte DataEntry. De asemenea, ofera metode pentru filtrarea
+datelor pe baza intrebarilor, calcularea mediei pe state si determinarea daca o valoare mai mica sau mai mare este mai buna pentru
+o intrebare.
+
+Fisierul routes.py defineste mai multe rute API care permit interactiunea cu serverul. De exemplu, ruta /api/state_mean calculeaza media
+pentru o intrebare specifica intr-un anumit stat, iar /api/global_mean calculeaza media globala pentru o intrebare.
+Alte rute includ /api/best5 si /api/worst5, care returneaza cele mai bune sau cele mai slabe cinci state pentru o intrebare,
+si /api/diff_from_mean, care calculeaza diferenta dintre media globala si media fiecarui stat. Ruta /api/graceful_shutdown permite
+oprirea serverului in siguranta.
+
+Procesarea task-urilor este gestionata de clasa ThreadPool, care creeaza un pool de thread-uri pentru procesarea task-urilor asincrone.
+Task-urile sunt adaugate in coada folosind metoda add_task, iar rezultatele sunt salvate in fisiere JSON in directorul results.
+
+Testele unitare sunt definite in TestWebServer.py. Acestea valideaza functiile din DataIngestor, cum ar fi get_states_mean
+si is_min_better, precum si rutele API, cum ar fi /api/state_mean si /api/global_mean. Testele utilizeaza un fisier CSV temporar
+pentru a valida corectitudinea calculelor.
+
+Pentru a rula proiectul, este necesar sa aveti instalat Python 3.8 sau o versiune mai recenta. Dependentele pot fi instalate
+folosind comanda pip install flask. Serverul Flask poate fi pornit ruland comanda python -m flask run, iar testele unitare pot
+fi executate cu python -m unittest discover -s unittests.
+
+Proiectul isi propune sa proceseze si sa analizeze datele despre nutritie si activitate fizica din SUA, oferind un API robust
+si eficient. Implementarea este modulara, testata si usor de extins pentru alte tipuri de analize. Exemple de utilizare
+includ obtinerea mediei globale pentru o intrebare sau identificarea celor mai bune cinci state pentru o intrebare specifica.
+Acest proiect ofera o solutie completa pentru analiza datelor despre nutritie si activitate fizica, utilizand un API bine structurat
+si eficient.
